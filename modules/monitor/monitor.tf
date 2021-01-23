@@ -5,6 +5,7 @@ resource "aws_instance" "monitor" {
   subnet_id                   = var.subnet_id
   key_name                    = var.key_name
   vpc_security_group_ids      = [aws_security_group.monitor.id]
+  associate_public_ip_address = true
 
   tags = {
     Name        = "${var.application}-monitor-instance-${count.index}"
