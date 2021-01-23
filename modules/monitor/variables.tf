@@ -11,20 +11,14 @@ variable "amis" {
 }
 
 variable "instance_type" {
-  default = "t2.medium"
+  default = "t2.small"
 }
 
 variable "key_name" {
   description = "The name of the Key Pair that can be used to SSH to each instance in the cluster"
 }
 
-variable "manager_count" {
-  default = "1"
-}
-
-variable "manager_subnet_ids" {
-  type = list(string)
-  default = []
+variable "subnet_id" {
 }
 
 variable "application" {
@@ -33,4 +27,12 @@ variable "application" {
 
 variable "vpc_id" {
   description = "vpc id"
+}
+
+variable "connection_user" {
+  default = "ubuntu"
+}
+
+variable "private_key" {
+  default = ""
 }

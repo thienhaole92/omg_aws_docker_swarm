@@ -4,8 +4,6 @@ resource "aws_instance" "bastion" {
   key_name                    = var.key_name
   vpc_security_group_ids      = [aws_security_group.bastion_sg.id]
   subnet_id                   = var.subnet_id
-  associate_public_ip_address = true
-  monitoring                  = true
 
   tags = {
     Name        = "${var.application}-bastion-instance"
@@ -45,7 +43,7 @@ resource "aws_security_group" "bastion_sg" {
   }
 
   ingress {
-    from_port   = 8
+    from_port   = 0
     to_port     = 0
     protocol    = "icmp"
     cidr_blocks = ["0.0.0.0/0"]

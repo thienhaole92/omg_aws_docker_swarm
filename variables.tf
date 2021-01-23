@@ -51,8 +51,12 @@ variable "controller_subnet_zones" {
   default = [""]
 }
 
+variable "worker_group_count" {
+  default = "1"
+}
+
 variable "worker_count" {
-  default = "2"
+  default = "1"
 }
 
 variable "worker_subnet_cidr" {
@@ -66,8 +70,12 @@ variable "worker_subnet_zones" {
   default = ["ap-southeast-1a", "ap-southeast-1b"]
 }
 
-variable "manager_count" {
+variable "manager_group_count" {
   default = "1"
+}
+
+variable "manager_count" {
+  default = "3"
 }
 
 variable "manager_subnet_cidr" {
@@ -80,6 +88,22 @@ variable "manager_subnet_zones" {
   type = list(string)
 
   default = ["ap-southeast-1c"]
+}
+
+variable "nat_count" {
+  default = "1"
+}
+
+variable "nat_subnet_cidr" {
+   type = list(string)
+
+  default = ["172.31.40.0/24"]
+}
+
+variable "nat_subnet_zones" {
+  type = list(string)
+
+  default = ["us-east-1c"]
 }
 
 variable "connection_user" {

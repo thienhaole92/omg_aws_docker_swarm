@@ -1,20 +1,20 @@
-resource "aws_instance" "controller" {
+resource "aws_instance" "monitor" {
   count                       = 1
   ami                         = lookup(var.amis, var.region)
   instance_type               = var.instance_type
-  subnet_id                   = element(var.controller_subnet_ids, count.index)
+  subnet_id                   = var.subnet_id
   key_name                    = var.key_name
-  vpc_security_group_ids      = [aws_security_group.controller.id]
+  vpc_security_group_ids      = [aws_security_group.monitor.id]
 
   tags = {
-    Name        = "${var.application}-controller-instance-${count.index}"
+    Name        = "${var.application}-monitor-instance-${count.index}"
     Application = var.application
   }
 }
 
-resource "aws_security_group" "controller" {
-  name        = "${var.application}-controller-sg"
-  description = "Security group for docker controller node"
+resource "aws_security_group" "monitor" {
+  name        = "${var.application}-monitor-sg"
+  description = "Security group for docker monitor node"
   vpc_id      = var.vpc_id
 
   ingress {

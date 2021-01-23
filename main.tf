@@ -11,12 +11,14 @@ module "vpc" {
   controller_subnet_cidr  = var.controller_subnet_cidr
   public_subnet_zone      = var.public_subnet_zone
   public_subnet_cidr      = var.public_subnet_cidr
-  worker_count            = var.worker_count
+  worker_group_count      = var.worker_group_count
   worker_subnet_zones     = var.worker_subnet_zones
   worker_subnet_cidr      = var.worker_subnet_cidr
-  manager_count           = var.manager_count
+  manager_group_count     = var.manager_group_count
   manager_subnet_zones    = var.manager_subnet_zones
   manager_subnet_cidr     = var.manager_subnet_cidr
+  nat_subnet_zones        = var.nat_subnet_zones
+  nat_subnet_cidr         = var.nat_subnet_cidr
 }
 
 module "bastion" {
@@ -31,14 +33,41 @@ module "bastion" {
   private_key     = file("${var.key_name}.pem")
 }
 
-module "controller" {
-  source = "./modules/nodes/controller"
+module "cicd" {
+  source = "./modules/cicd"
 
-  region                = var.region
-  key_name              = var.key_name
-  application           = var.application
-  vpc_id                = module.vpc.vpc_id
-  controller_subnet_ids = module.vpc.controller_subnet_ids
+  region          = var.region
+  key_name        = var.key_name
+  application     = var.application
+  vpc_id          = module.vpc.vpc_id
+  subnet_id       = module.vpc.public_subnet_id
+  connection_user = var.connection_user
+  private_key     = file("${var.key_name}.pem")
+}
+
+module "monitor" {
+  source = "./modules/monitor"
+
+  region          = var.region
+  key_name        = var.key_name
+  application     = var.application
+  vpc_id          = module.vpc.vpc_id
+  subnet_id       = module.vpc.public_subnet_id
+  connection_user = var.connection_user
+  private_key     = file("${var.key_name}.pem")
+}
+
+
+module "proxy" {
+  source = "./modules/proxy"
+
+  region          = var.region
+  key_name        = var.key_name
+  application     = var.application
+  vpc_id          = module.vpc.vpc_id
+  subnet_id       = module.vpc.public_subnet_id
+  connection_user = var.connection_user
+  private_key     = file("${var.key_name}.pem")
 }
 
 module "manager" {
@@ -47,6 +76,7 @@ module "manager" {
   region             = var.region
   key_name           = var.key_name
   application        = var.application
+  manager_count      = var.manager_count
   vpc_id             = module.vpc.vpc_id
   manager_subnet_ids = module.vpc.manager_subnet_ids
 }
@@ -57,6 +87,7 @@ module "worker" {
   region            = var.region
   key_name          = var.key_name
   application       = var.application
+  worker_count      = var.worker_count
   vpc_id            = module.vpc.vpc_id
   worker_subnet_ids = module.vpc.worker_subnet_ids
 }

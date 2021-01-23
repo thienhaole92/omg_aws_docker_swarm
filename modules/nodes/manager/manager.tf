@@ -1,12 +1,10 @@
 resource "aws_instance" "manager" {
-  count                       = 1
+  count                       = var.manager_count
   ami                         = lookup(var.amis, var.region)
   instance_type               = var.instance_type
   subnet_id                   = element(var.manager_subnet_ids, count.index)
   key_name                    = var.key_name
   vpc_security_group_ids      = [aws_security_group.manager.id]
-  associate_public_ip_address = true
-  source_dest_check           = false
 
   tags = {
     Name        = "${var.application}-manager-instance-${count.index}"

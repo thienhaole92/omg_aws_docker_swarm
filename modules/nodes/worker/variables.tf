@@ -30,3 +30,7 @@ variable "application" {
 variable "vpc_id" {
   description = "vpc id"
 }
+
+variable "worker_count" {
+  default = "1"
+}

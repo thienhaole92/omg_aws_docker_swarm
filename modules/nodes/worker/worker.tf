@@ -1,5 +1,5 @@
 resource "aws_instance" "worker" {
-  count                  = 2
+  count                  = var.worker_count
   ami                    = lookup(var.amis, var.region)
   instance_type          = var.instance_type
   subnet_id              = element(var.worker_subnet_ids, count.index)

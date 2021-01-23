@@ -1,20 +1,20 @@
-resource "aws_instance" "controller" {
+resource "aws_instance" "cicd" {
   count                       = 1
   ami                         = lookup(var.amis, var.region)
   instance_type               = var.instance_type
-  subnet_id                   = element(var.controller_subnet_ids, count.index)
+  subnet_id                   = var.subnet_id
   key_name                    = var.key_name
-  vpc_security_group_ids      = [aws_security_group.controller.id]
+  vpc_security_group_ids      = [aws_security_group.cicd.id]
 
   tags = {
-    Name        = "${var.application}-controller-instance-${count.index}"
+    Name        = "${var.application}-cicd-instance-${count.index}"
     Application = var.application
   }
 }
 
-resource "aws_security_group" "controller" {
-  name        = "${var.application}-controller-sg"
-  description = "Security group for docker controller node"
+resource "aws_security_group" "cicd" {
+  name        = "${var.application}-cicd-sg"
+  description = "Security group for docker cicd node"
   vpc_id      = var.vpc_id
 
   ingress {
