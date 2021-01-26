@@ -22,7 +22,7 @@ resource "aws_instance" "worker" {
 resource "aws_volume_attachment" "attachment" {
   count = var.worker_count
 
-  device_name = "/dev/sdb"
+  device_name = "/dev/xvdf"
   volume_id   = aws_ebs_volume.volume[count.index].id
   instance_id = element(aws_instance.worker.*.id, count.index)
 }
