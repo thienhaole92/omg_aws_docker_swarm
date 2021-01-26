@@ -12,6 +12,20 @@ resource "aws_instance" "worker" {
   }
 }
 
+resource "aws_volume_attachment" "attachment" {
+  count = var.worker_count
+
+  device_name = "/dev/sdh"
+  volume_id   = aws_ebs_volume.volume[count.index].id
+  instance_id = element(aws_instance.worker.*.id, count.index)
+}
+
+resource "aws_ebs_volume" "volume" {
+  count             = var.worker_count
+  availability_zone = element(aws_instance.worker.*.availability_zone, count.index)
+  size              = 1
+}
+
 resource "aws_security_group" "worker" {
   name        = "${var.application}-worker-sg"
   description = "Security group for docker worker node"

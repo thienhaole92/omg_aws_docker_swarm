@@ -1,15 +1,29 @@
 resource "aws_instance" "manager" {
-  count                       = var.manager_count
-  ami                         = lookup(var.amis, var.region)
-  instance_type               = var.instance_type
-  subnet_id                   = element(var.manager_subnet_ids, count.index)
-  key_name                    = var.key_name
-  vpc_security_group_ids      = [aws_security_group.manager.id]
+  count                  = var.manager_count
+  ami                    = lookup(var.amis, var.region)
+  instance_type          = var.instance_type
+  subnet_id              = element(var.manager_subnet_ids, count.index)
+  key_name               = var.key_name
+  vpc_security_group_ids = [aws_security_group.manager.id]
 
   tags = {
     Name        = "${var.application}-manager-instance-${count.index}"
     Application = var.application
   }
+}
+
+resource "aws_volume_attachment" "attachment" {
+  count = var.manager_count
+
+  device_name = "/dev/sdh"
+  volume_id   = aws_ebs_volume.volume[count.index].id
+  instance_id = element(aws_instance.manager.*.id, count.index)
+}
+
+resource "aws_ebs_volume" "volume" {
+  count             = var.manager_count
+  availability_zone = element(aws_instance.manager.*.availability_zone, count.index)
+  size              = 1
 }
 
 resource "aws_security_group" "manager" {
