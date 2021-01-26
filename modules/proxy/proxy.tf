@@ -7,6 +7,13 @@ resource "aws_instance" "proxy" {
   vpc_security_group_ids      = [aws_security_group.proxy.id]
   associate_public_ip_address = true
 
+  dynamic "root_block_device" {
+    for_each = var.root_block_device
+    content {
+      volume_size = lookup(root_block_device.value, "volume_size", null)
+    }
+  }
+
   tags = {
     Name        = "${var.application}-proxy-instance-${count.index}"
     Application = var.application

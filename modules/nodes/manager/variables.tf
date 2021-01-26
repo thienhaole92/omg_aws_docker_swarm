@@ -23,7 +23,7 @@ variable "manager_count" {
 }
 
 variable "manager_subnet_ids" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
@@ -33,4 +33,15 @@ variable "application" {
 
 variable "vpc_id" {
   description = "vpc id"
+}
+
+variable "root_block_device" {
+  type        = list(map(string))
+  description = "Customize details about the root block device of the instance. See Block Devices below for details"
+  default     = []
+}
+
+variable "gluster_volume_size" {
+  type    = number
+  default = 16
 }

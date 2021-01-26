@@ -36,3 +36,15 @@ variable "connection_user" {
 variable "private_key" {
   default = ""
 }
+
+variable "root_block_device" {
+  type        = list(map(string))
+  description = "Customize details about the root block device of the instance. See Block Devices below for details"
+  default = [
+    {
+      volume_type = "gp2"
+      volume_size = 32
+      encrypted   = true
+    },
+  ]
+}

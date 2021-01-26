@@ -109,3 +109,8 @@ variable "nat_subnet_zones" {
 variable "connection_user" {
   default = "ubuntu"
 }
+
+variable "gluster_volume_size" {
+  type    = number
+  default = 16
+}

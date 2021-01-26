@@ -6,6 +6,13 @@ resource "aws_instance" "worker" {
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.worker.id]
 
+  dynamic "root_block_device" {
+    for_each = var.root_block_device
+    content {
+      volume_size = lookup(root_block_device.value, "volume_size", null)
+    }
+  }
+
   tags = {
     Name        = "${var.application}-worker-instance-${count.index}"
     Application = var.application
@@ -23,7 +30,7 @@ resource "aws_volume_attachment" "attachment" {
 resource "aws_ebs_volume" "volume" {
   count             = var.worker_count
   availability_zone = element(aws_instance.worker.*.availability_zone, count.index)
-  size              = 1
+  size              = var.gluster_volume_size
 }
 
 resource "aws_security_group" "worker" {

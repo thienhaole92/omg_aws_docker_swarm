@@ -79,6 +79,16 @@ module "manager" {
   manager_count      = var.manager_count
   vpc_id             = module.vpc.vpc_id
   manager_subnet_ids = module.vpc.manager_subnet_ids
+
+  root_block_device = [
+    {
+      volume_type = "gp2"
+      volume_size = 32
+      encrypted   = true
+    },
+  ]
+
+  gluster_volume_size = var.gluster_volume_size
 }
 
 module "worker" {
@@ -90,4 +100,14 @@ module "worker" {
   worker_count      = var.worker_count
   vpc_id            = module.vpc.vpc_id
   worker_subnet_ids = module.vpc.worker_subnet_ids
+
+  root_block_device = [
+    {
+      volume_type = "gp2"
+      volume_size = 32
+      encrypted   = true
+    },
+  ]
+
+  gluster_volume_size = var.gluster_volume_size
 }
